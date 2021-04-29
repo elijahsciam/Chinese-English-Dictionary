@@ -1,13 +1,10 @@
 import React from 'react'
-
-import {Navbar} from './components'
-import Routes from './routes'
+import Dictionary from './components/dictionary'
 
 const App = () => {
   return (
     <div>
-      <Navbar />
-      <Routes />
+      <Dictionary />
     </div>
   )
 }
