@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
-const fs = require('fs')
 
 const readData = data => {
   let dict = {simplified: {}, traditional: {}}
@@ -43,16 +42,7 @@ const readData = data => {
   return dict
 }
 
-const dictionary = fs.readFile(
-  'src/app/pie/dict/cedict_ts.u8',
-  'utf8',
-  (err, data) => {
-    if (err) throw err
-    readData(data)
-  }
-)
-
-export default dictionary
+module.exports = readData
 
 // const REGEX_CHINESE = /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u;
 // const isChinese = (str) => REGEX_CHINESE.test(str);
