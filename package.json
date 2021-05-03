@@ -49,6 +49,7 @@
     "file-system": "^2.2.2",
     "fs": "*",
     "history": "^4.9.0",
+    "https": "^1.0.0",
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-google-oauth": "^2.0.0",
