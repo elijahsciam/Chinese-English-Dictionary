@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 const fs = require('fs')
 const router = require('express').Router()
-const readData = require('./dict/parser')
+const parseData = require('./dict/parser')
 const https = require('https')
 
 module.exports = router
@@ -20,33 +20,41 @@ const read = async () => {
   return dict
 }
 
+const buildRequest = async (word, style, language) => {
+  const dict = await read().then(data => parseData(data))
+  const pinyin = dict[style][word].pinyin
+  const english = dict[style][word].english
+
+  if (dict) {
+    return [pinyin, english]
+  }
+}
+
 const ChineseDictionary = function(obj) {
   this.config = {
     char_type: obj.character || 'simplified'
   }
 }
 
-// ChineseDictionary.prototype.find = function(word) {
-//   return buildRequest(word, this.config.char_type)
-// }
-
-// const buildRequest = (word, style) => {
-//  if (isChinese(word)) {
-//  }
-// }
-
-function OptionObj(path) {
-  const options = {}
+ChineseDictionary.prototype.find = function(word) {
+  if (isChinese(word)) {
+    return buildRequest(word, this.config.char_type, 'chinese')
+  } else {
+    return buildRequest(word, this.config.char_type, 'english')
+  }
 }
 
-router.get('/', async (req, res, next) => {
-  let dict = await fs.readFileSync(
-    'server/api/dict/cedict_ts.u8',
-    'utf8',
-    (err, data) => {
-      if (err) throw err
-    }
-  )
-  dict = readData(dict)
-  res.json(dict)
-})
+const hi = new ChineseDictionary({char_type: 'simplified'})
+
+console.log(hi.find('好'))
+// router.get('/', async (req, res, next) => {
+//   let dict = await fs.readFileSync(
+//     'server/api/dict/cedict_ts.u8',
+//     'utf8',
+//     (err, data) => {
+//       if (err) throw err
+//     }
+//   )
+//   dict = readData(dict)
+//   res.json(dict)
+// })
