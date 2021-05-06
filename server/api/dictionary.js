@@ -9,30 +9,17 @@ module.exports = router
 const REGEX_CHINESE = /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u
 const isChinese = str => REGEX_CHINESE.test(str)
 
-// const read = async () => {
-//   let dict = await fs.readFileSync(
-//     'server/api/dict/cedict_ts.u8',
-//     'utf8',
-//     (err, data) => {
-//       if (err) throw err
-//     }
-//   )
-//   return dict
-// }
-
-const buildRequest = async (word, style, language) => {
-  let dict = await fs.readFileSync(
+const buildRequest = (word, style, language) => {
+  let dict = fs.readFileSync(
     'server/api/dict/cedict_ts.u8',
     'utf8',
     (err, data) => {
       if (err) throw err
-      if (data) {
-        parseData(data)
-      }
     }
   )
-  const pinyin = dict.simplified[word].pinyin
-  const english = dict.simplified[word].english
+  const dictionary = parseData(dict)
+  const pinyin = dictionary.simplified[word].pinyin
+  const english = dictionary.simplified[word].english
   return [pinyin, english]
 }
 
@@ -48,14 +35,4 @@ ChineseDictionary.prototype.find = function(word) {
 
 const hi = new ChineseDictionary({char_type: 'simplified'})
 
-// router.get('/', async (req, res, next) => {
-//   let dict = await fs.readFileSync(
-//     'server/api/dict/cedict_ts.u8',
-//     'utf8',
-//     (err, data) => {
-//       if (err) throw err
-//     }
-//   )
-//   dict = readData(dict)
-//   res.json(dict)
-// })
+console.log(hi.find('宝贝'))
