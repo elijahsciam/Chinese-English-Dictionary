@@ -1,11 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
+const ChineseDictionary = require('../../server/api/dictionary')
 
 /**
  * COMPONENT
  */
 export const UserHome = props => {
+  console.log(ChineseDictionary.find('hello'))
   const {email} = props
 
   return (

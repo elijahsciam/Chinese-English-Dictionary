@@ -1,8 +1,9 @@
+/* eslint-disable dot-notation */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 
 const parseData = data => {
-  let dict = {simplified: {}, traditional: {}}
+  let dict = {simplified: {}, traditional: {}, english: {}}
   const lines = data.split('\n')
   const chars_pinyin_english = lines.map(line => {
     return line.split('/')
@@ -37,6 +38,14 @@ const parseData = data => {
   for (const tChar in traditionalChar) {
     if (tChar) {
       dict.traditional[traditionalChar[tChar]] = {english: english[tChar]}
+    }
+  }
+  for (const eng in english) {
+    if (eng) {
+      dict.english[english[eng]] = {
+        simplified: simplifiedChar[eng],
+        traditional: traditionalChar[eng]
+      }
     }
   }
   return dict

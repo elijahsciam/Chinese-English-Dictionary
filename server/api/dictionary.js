@@ -16,6 +16,7 @@ const buildRequest = (word, style, language) => {
   )
 
   const dictionary = parseData(dict)
+
   if (language === 'chinese') {
     if (style === 'simplified') {
       const pinyin = dictionary[style][word].pinyin.split(']')
@@ -25,17 +26,18 @@ const buildRequest = (word, style, language) => {
       const english = dictionary[style][word].english
       return {english: english}
     }
+  } else {
+    return dictionary.english[word]
   }
-  // else --> how can I search for english? May need to add an english property in the parser
 }
 
 const ChineseDictionary = function(obj) {
   this.config = {
-    char_type: obj.char_type || 'simplified'
+    char_type: obj ? obj.char_type : 'simplified'
   }
 }
 
-ChineseDictionary.prototype.find = function(word) {
+ChineseDictionary.prototype.translate = function(word) {
   if (isChinese(word)) {
     return buildRequest(word, this.config.char_type, 'chinese')
   } else {
@@ -43,6 +45,4 @@ ChineseDictionary.prototype.find = function(word) {
   }
 }
 
-const hi = new ChineseDictionary({char_type: 'traditional'})
-
-console.log(hi.find('龍燈'))
+module.exports = ChineseDictionary
