@@ -1,11 +1,8 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
 const fs = require('fs')
-const router = require('express').Router()
 const parseData = require('./dict/parser')
-const https = require('https')
 
-module.exports = router
 const REGEX_CHINESE = /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u
 const isChinese = str => REGEX_CHINESE.test(str)
 
@@ -17,15 +14,22 @@ const buildRequest = (word, style, language) => {
       if (err) throw err
     }
   )
+
   const dictionary = parseData(dict)
-  const pinyin = dictionary.simplified[word].pinyin
-  const english = dictionary.simplified[word].english
-  return [pinyin, english]
+
+  if (style === 'simplified') {
+    const pinyin = dictionary[style][word].pinyin.split(']')
+    const english = dictionary[style][word].english
+    return {pinyin: pinyin[0].toString(), english}
+  } else {
+    const english = dictionary[style][word].english
+    return {english: english}
+  }
 }
 
 const ChineseDictionary = function(obj) {
   this.config = {
-    char_type: obj.character || 'simplified'
+    char_type: obj.char_type || 'simplified'
   }
 }
 
@@ -33,6 +37,6 @@ ChineseDictionary.prototype.find = function(word) {
   return buildRequest(word, this.config.char_type, 'chinese')
 }
 
-const hi = new ChineseDictionary({char_type: 'simplified'})
+const hi = new ChineseDictionary({char_type: 'traditional'})
 
-console.log(hi.find('宝贝'))
+console.log(hi.find('龍燈'))

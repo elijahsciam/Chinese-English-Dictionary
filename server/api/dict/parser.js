@@ -36,7 +36,7 @@ const parseData = data => {
   }
   for (const tChar in traditionalChar) {
     if (tChar) {
-      dict.traditional[traditionalChar[tChar]] = english[tChar]
+      dict.traditional[traditionalChar[tChar]] = {english: english[tChar]}
     }
   }
   return dict
