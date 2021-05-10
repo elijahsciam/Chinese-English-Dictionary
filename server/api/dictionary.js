@@ -7,15 +7,7 @@ const REGEX_CHINESE = /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u
 const isChinese = str => REGEX_CHINESE.test(str)
 
 const buildRequest = (word, style, language) => {
-  let dict = fs.readFileSync(
-    'server/api/dict/cedict_ts.u8',
-    'utf8',
-    (err, data) => {
-      if (err) throw err
-    }
-  )
-
-  const dictionary = parseData(dict)
+  const dictionary = parseData()
 
   if (language === 'chinese') {
     if (style === 'simplified') {
@@ -44,5 +36,16 @@ ChineseDictionary.prototype.translate = function(word) {
     return buildRequest(word, this.config.char_type, 'english')
   }
 }
+
+// ChineseDictionary.prototype.findAll = function(word) {
+//   //  const filtered = Object.fromEntries(Object.entries(dictionary.english).filter(([key, value]) => {
+//   //     return key.includes(word)
+//   //   }))
+//   //   return filtered
+// }
+
+const dic = new ChineseDictionary()
+
+console.log(dic.translate('book'))
 
 module.exports = ChineseDictionary

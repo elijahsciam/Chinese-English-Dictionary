@@ -1,8 +1,16 @@
 /* eslint-disable dot-notation */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-vars */
+const fs = require('fs')
 
-const parseData = data => {
+const parseData = () => {
+  let data = fs.readFileSync(
+    'server/api/dict/cedict_ts.u8',
+    'utf8',
+    (err, data) => {
+      if (err) throw err
+    }
+  )
   let dict = {simplified: {}, traditional: {}, english: {}}
   const lines = data.split('\n')
   const chars_pinyin_english = lines.map(line => {
