@@ -2,36 +2,28 @@
 /* eslint-disable no-unused-vars */
 const fs = require('fs');
 const parseData = require('./dict/parser');
-const https = require('https');
-const got = require('got');
+const path = require('path');
 
 const REGEX_CHINESE = /[\u4e00-\u9fff]|[\u3400-\u4dbf]|[\u{20000}-\u{2a6df}]|[\u{2a700}-\u{2b73f}]|[\u{2b740}-\u{2b81f}]|[\u{2b820}-\u{2ceaf}]|[\uf900-\ufaff]|[\u3300-\u33ff]|[\ufe30-\ufe4f]|[\uf900-\ufaff]|[\u{2f800}-\u{2fa1f}]/u;
 const isChinese = (str) => REGEX_CHINESE.test(str);
 
-const endpoint =
-  'https://raw.githubusercontent.com/elijahsciam/Chinese-English-Dictionary/npm/dict/cedict_ts.u8';
-var dictionary;
+const buildRequest = (word, style, language) => {
+  const filePath = path.resolve(path.join(__dirname, './dict/cedict_ts.u8'));
 
-const buildRequest = async (word, style, language) => {
-  https
-    .request(endpoint, (res) => {
-      res.setEncoding('utf8');
-      res.on('data', (d) => {
-        dictionary += d;
-      });
-    })
-    .end();
-  if (dictionary) {
-    dictionary = parseData(dictionary);
-    if (language === 'chinese') {
-      if (style === 'simplified') {
-        const pinyin = dictionary[style][word].pinyin.split(']');
-        const english = dictionary[style][word].english;
-        return { pinyin: pinyin[0].toString(), english };
-      } else {
-        const english = dictionary[style][word].english;
-        return { english: english };
-      }
+  let dict = fs.readFileSync(filePath, 'utf8', (err, data) => {
+    if (err) throw err;
+  });
+
+  const dictionary = parseData(dict);
+
+  if (language === 'chinese') {
+    if (style === 'simplified') {
+      const pinyin = dictionary[style][word].pinyin.split(']');
+      const english = dictionary[style][word].english;
+      return { pinyin: pinyin[0].toString(), english };
+    } else {
+      const english = dictionary[style][word].english;
+      return { english: english };
     }
   }
 };
@@ -50,8 +42,9 @@ ChineseDictionary.prototype.find = function (word) {
   }
 };
 
-const hi = new ChineseDictionary({ char_type: 'traditional' });
+const translate = (word, characterType) => {
+  const dict = new ChineseDictionary({ char_type: characterType });
+  return dict.find(word);
+};
 
-console.log(hi.find('龍燈'));
-
-module.exports = ChineseDictionary;
+module.exports = translate;
