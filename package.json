@@ -29,6 +29,8 @@
   },
   "homepage": "https://github.com/elijahsciam/Chinese-English-Dictionary#readme",
   "dependencies": {
-    "fs": "*"
+    "concat-stream": "^2.0.0",
+    "fs": "*",
+    "got": "^9.6.0"
   }
 }
