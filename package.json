@@ -1,6 +1,6 @@
 {
   "name": "chinese-english-dictionary",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A chinese-english dictionary for developers",
   "main": "dictionary.js",
   "scripts": {
